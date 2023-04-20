@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import isEmail from "validator/lib/isEmail";
 import React from "react";
+import { firebaseAuth , createUserWithEmailAndPassword, signInWithEmailAndPassword } from "../firebase.js";
 const LoginModule = (CloseMenu) => {
   const [DialogOpen, setDialog] = React.useState(false);
   const [Validate, setValidate] = React.useState(false);
@@ -41,13 +42,36 @@ const LoginModule = (CloseMenu) => {
   const handleDialog = () => {
     setDialog(false);
   };
-  const handleSubmit = () => {
-    // LoginSubmit
-    IsValid(Email);
-    if (isEmail(Email)) {
+  const handleSubmit = async() => {
+    try {
+      console.log(Email)
+      const userCredential = await signInWithEmailAndPassword(firebaseAuth, Email, Password); // 실제로 로그인을 수행하는 함수
+      const user = userCredential.user
+      console.log(user.email); // 이런식으로 이메일을 가져올 수 있음
       setDialog(false);
       CloseMenu();
-    } else {
+    } catch (error) {
+  
+      const errorCode = error.code;
+  
+      switch (errorCode) {
+
+        // 지정된 이메일을 사용하는 사용자가 비활성화되었을 때
+        case "auth/user-disabled":
+          alert("해당 이메일은 비활성화 되었습니다")
+          break;
+  
+        // 이메일에 해당하는 사용자가 없을 때
+        case "auth/user-not-found":
+          alert("해당 이메일은 없는 이메일 입니다")
+          break;
+  
+        // 비밀번호가 유효하지 않을 때
+        case "auth/wrong-password":
+          alert("비밀번호를 확인해주세요!")
+          break;
+  
+      }
     }
   };
 
