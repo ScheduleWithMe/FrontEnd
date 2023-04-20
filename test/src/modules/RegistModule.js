@@ -12,6 +12,8 @@ import {
 import isEmail from "validator/lib/isEmail";
 import React from "react";
 import MuiAlert from "@mui/material/Alert";
+import { firebaseAuth , createUserWithEmailAndPassword } from "../firebase.js";
+
 const RegistModule = (CloseMenu) => {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -79,15 +81,15 @@ const RegistModule = (CloseMenu) => {
       empty: Email.length === 0,
     },
     Password: {
-      case1: Password.length !== 0 && Password.length < 4,
+      case1: Password.length !== 0 && Password.length < 6,
       case2: Password.length > 12,
-      alert1: "4~12글자 사이로 설정해주세요",
+      alert1: "6~12글자 사이로 설정해주세요",
       alert2: "비밀번호 최대길이는 12글자 입니다.",
       empty: Password.length === 0,
     },
     Compare: {
       case1: Compare !== Password,
-      case2: Compare.length > 3 && Compare.length < 12,
+      case2: Compare.length > 5 && Compare.length < 12,
       alert1: "비밀번호를 확인해주세요",
       alert2: "",
       empty: Compare.length === 0,
@@ -138,17 +140,54 @@ const RegistModule = (CloseMenu) => {
   };
 
   const handleSubmit = async () => {
-    IsValid(Email);
-    if (isEmail(Email)) {
-      if (Password !== Compare) {
-        return alert("비밀번호가 일치하지 않습니다");
-      }
+    try {
+
+      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, Email, Password); // 실제로 회원가입을 수행하는 함수
+      const user = userCredential.user;
+  
+      console.log(user.email); // 이런식으로 이메일을 가져올 수 있음
       setLoading("pending");
-      setLoading("rejected");
-      return;
-    } else {
-      return alert("이메일 양식이 올바르지 않습니다");
-    }
+      CloseMenu()
+  } catch (error) {
+  
+      const errorCode = error.code;
+  
+      switch (errorCode) {
+  
+  
+          // 이미 가입된 이메일인 경우
+          case "auth/email-already-in-use":
+            alert("이미 가입된 이메일 입니다")
+            break;
+    
+          // 이메일 형식이 유효하지 않을 때
+          case "auth/invalid-email":
+            alert("이메일 형식이 유효하지 않습니다")
+            break;
+    
+          // firebase 설정에서 이메일/비밀번호 계정이 활성화되어 있지 않은 경우
+          case "auth/operation-not-allowed":
+            break;
+    
+          // 비밀번호가 충분히 강력하지 않은 경우
+          case "auth/weak-password":
+            alert("비밀번호 정책을 다시 확인해 주세요")
+            break;
+    
+        }
+      
+  }
+    // IsValid(Email);
+    // if (isEmail(Email)) {
+    //   if (Password !== Compare) {
+    //     return alert("비밀번호가 일치하지 않습니다");
+    //   }
+    //   setLoading("pending");
+    //   setLoading("rejected");
+    //   return;
+    // } else {
+    //   return alert("이메일 양식이 올바르지 않습니다");
+    // }
   };
 
   const handleDialog = () => {
