@@ -2,10 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { globalTheme } from "./globalTheme";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  <ThemeProvider theme={globalTheme}>
+    <CssBaseline />
     <App />
-  </React.StrictMode>
+  </ThemeProvider>
 );

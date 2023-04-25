@@ -7,12 +7,11 @@ import {
   Snackbar,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import isEmail from "validator/lib/isEmail";
 import React from "react";
 import MuiAlert from "@mui/material/Alert";
-import { firebaseAuth , createUserWithEmailAndPassword } from "../firebase.js";
+import { firebaseAuth, createUserWithEmailAndPassword } from "../firebase.js";
 
 const RegistModule = (CloseMenu) => {
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -141,42 +140,40 @@ const RegistModule = (CloseMenu) => {
 
   const handleSubmit = async () => {
     try {
-
-      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, Email, Password); // 실제로 회원가입을 수행하는 함수
+      const userCredential = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        Email,
+        Password
+      ); // 실제로 회원가입을 수행하는 함수
       const user = userCredential.user;
-  
+
       console.log(user.email); // 이런식으로 이메일을 가져올 수 있음
       setLoading("pending");
-      CloseMenu()
-  } catch (error) {
-  
+      CloseMenu();
+    } catch (error) {
       const errorCode = error.code;
-  
+
       switch (errorCode) {
-  
-  
-          // 이미 가입된 이메일인 경우
-          case "auth/email-already-in-use":
-            alert("이미 가입된 이메일 입니다")
-            break;
-    
-          // 이메일 형식이 유효하지 않을 때
-          case "auth/invalid-email":
-            alert("이메일 형식이 유효하지 않습니다")
-            break;
-    
-          // firebase 설정에서 이메일/비밀번호 계정이 활성화되어 있지 않은 경우
-          case "auth/operation-not-allowed":
-            break;
-    
-          // 비밀번호가 충분히 강력하지 않은 경우
-          case "auth/weak-password":
-            alert("비밀번호 정책을 다시 확인해 주세요")
-            break;
-    
-        }
-      
-  }
+        // 이미 가입된 이메일인 경우
+        case "auth/email-already-in-use":
+          alert("이미 가입된 이메일 입니다");
+          break;
+
+        // 이메일 형식이 유효하지 않을 때
+        case "auth/invalid-email":
+          alert("이메일 형식이 유효하지 않습니다");
+          break;
+
+        // firebase 설정에서 이메일/비밀번호 계정이 활성화되어 있지 않은 경우
+        case "auth/operation-not-allowed":
+          break;
+
+        // 비밀번호가 충분히 강력하지 않은 경우
+        case "auth/weak-password":
+          alert("비밀번호 정책을 다시 확인해 주세요");
+          break;
+      }
+    }
     // IsValid(Email);
     // if (isEmail(Email)) {
     //   if (Password !== Compare) {
