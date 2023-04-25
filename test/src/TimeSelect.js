@@ -36,13 +36,15 @@ const TimeSelect = (props) => {
     if (startPoint) {
       const [startRow, startCol] = startPoint;
       const newButtonStates = [...buttonStates];
-      const [min, max] = [Math.min(startCol, colIndex), Math.max(startCol, colIndex)];
+      const [min, max] = [
+        Math.min(startCol, colIndex),
+        Math.max(startCol, colIndex),
+      ];
       for (let i = min; i <= max; i++) {
         newButtonStates[startRow][i] = true;
       }
       setButtonStates(newButtonStates);
     }
-    
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
