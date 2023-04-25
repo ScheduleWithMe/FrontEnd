@@ -33,14 +33,16 @@ const TimeSelect = (props) => {
   };
 
   const handleDragEvent = (colIndex, rowIndex) => {
-    console.log(colIndex, rowIndex);
-    // TODO >>>> click만 했을때는 dragevent 가 호출되지 않으니 체크해야함 (그냥 onClick 이벤트 넣어주면 되는듯?)
-    // onMouseDown 을 통해 startPoint = [i,j] 가 정해지고
-    // onMouseUp 을 통해 마우스 버튼이 떼어진 column index를 가져옴
-    // startPoint 의 s_row(startPoint row) 는 고정되고
-    // s_column(startPoint column) 과 onMouseUp 을 통해 가져온 column index값을 비교해서 그 사이에 있는
-    // 모든 값들을 넣어주면 됨.
-    const [pivotRow, startCol] = startPoint;
+    if (startPoint) {
+      const [startRow, startCol] = startPoint;
+      const newButtonStates = [...buttonStates];
+      const [min, max] = [Math.min(startCol, colIndex), Math.max(startCol, colIndex)];
+      for (let i = min; i <= max; i++) {
+        newButtonStates[startRow][i] = true;
+      }
+      setButtonStates(newButtonStates);
+    }
+    
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
