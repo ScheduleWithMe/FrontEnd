@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // 다른 모달들과 다르게 일부러 모달 밖을 눌러도 안꺼지게 했습니다.
 function ResultModal(props) {
@@ -19,24 +19,28 @@ function ResultModal(props) {
   const title = props.renderData.title;
   const content = props.renderData.content;
   const [open, setOpen] = props.open;
-  const [snackbar, setSnackbar] = React.useState({
+  const [snackbar, setSnackbar] = useState({
     open: false,
     vertical: "top",
     horizontal: "center",
     content: "클립보드에 URL 을 복사했습니다!",
   });
-  const [snackbarContent, setSnackbarContent] = React.useState("");
-  const handleClickOpen = () => {
-    setOpen(true);
+
+  useEffect(() => {
+    setCopied(false);
+  }, [content]);
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    setCopied(true);
+    setSnackbar({ ...snackbar, open: true });
   };
+
   const handleClose = () => {
     setOpen(false);
   };
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        모달버튼입니다
-      </Button>
       <Dialog open={open}>
         <Snackbar
           open={snackbar.open}
@@ -51,15 +55,17 @@ function ResultModal(props) {
         <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
           <Grid container sx={{ alignItems: "center", pb: 3 }}>
             <Typography>{content}</Typography>
-            <CopyToClipboard
-              text={content}
-              onCopy={() => setSnackbar({ ...snackbar, open: true })}
-            >
-              <Button variant="contained">복사하기</Button>
+            <CopyToClipboard text={content} onCopy={() => handleCopy()}>
+              <Button variant={`${copied ? "outlined" : "contained"}`}>
+                복사하기
+              </Button>
             </CopyToClipboard>
           </Grid>
           <Grid container sx={{ justifyContent: "flex-end" }}>
-            <Button variant="outlined" onClick={handleClose}>
+            <Button
+              variant={`${!copied ? "outlined" : "contained"}`}
+              onClick={handleClose}
+            >
               나갈래요
             </Button>
           </Grid>
