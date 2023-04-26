@@ -19,6 +19,7 @@ const buttonSX = {
   width: "22rem",
   height: "22rem",
   fontSize: "2.5rem",
+  fontWeight: 700,
 };
 const fullSX = { display: "flex", width: "100%", height: "100%" };
 
@@ -38,7 +39,7 @@ function MainPage() {
     content: "",
   });
   const [toggle, setToggle] = React.useState("landing");
-  const handleSubmit = async (type, host, title, startDate) => {
+  const handleSubmit = (type, host, title, startDate) => {
     const date = `${startDate.$y}-${startDate.$M + 1}-${startDate.$D}`;
     const Schedule = {
       hostNickname: host,
@@ -50,10 +51,6 @@ function MainPage() {
       if (!response.success) return setSnackbar({ ...snackbar, open: true });
       setModalContents({ ...modalContents, content: response.docRef });
     });
-    console.log(
-      "🚀 ~ file: MainPage.js:40 ~ MainPage ~ modalContents:",
-      modalContents
-    );
     setModalOpen(true);
     return;
   };
@@ -65,7 +62,11 @@ function MainPage() {
       className="center"
     >
       <Grid item sx={{ pb: 5 }}>
-        <Typography fontSize="6rem">Schedule With Me</Typography>
+        <Typography sx={{ fontWeight: 800 }} fontSize="6rem">
+          <span style={{ color: "#1269AE" }}>S</span>chedule{" "}
+          <span style={{ color: "#1269AE" }}>W</span>ith{" "}
+          <span style={{ color: "#1269AE" }}>M</span>e
+        </Typography>
       </Grid>
       <Grid item>
         <Stack direction="row" spacing={5}>
@@ -74,14 +75,14 @@ function MainPage() {
             variant="outlined"
             onClick={() => setToggle("host")}
           >
-            HOST
+            HOSTING
           </Button>
           <Button
             sx={buttonSX}
             variant="contained"
             onClick={() => setToggle("guest")}
           >
-            GUEST
+            ENTER
           </Button>
         </Stack>
       </Grid>
@@ -102,20 +103,20 @@ function MainPage() {
           </Grid>
           {type === "host" && (
             <ResultModal
+              setToggle={setToggle}
               open={[modalOpen, setModalOpen]}
               renderData={modalContents}
             />
           )}
         </Grid>
+        {/* 여기 src 만 적당한 이미지 주소로 바꿔주시면 됩니다 */}
         <Grid item xs={6}>
           <Paper
             sx={{ ...fullSX, backgroundColor: "#1269AE", borderRadius: 0 }}
+            component="img"
+            src="https://objectstorage.ap-seoul-1.oraclecloud.com/n/cnylck3cahga/b/bucket-20230124-0355/o/73ed1bb6b203e6df219acb613b4b6960.jpg"
             className="center"
-          >
-            <Typography variant="h3" color="white">
-              적당한 이미지 넣어야돼요
-            </Typography>
-          </Paper>
+          ></Paper>
         </Grid>
       </Grid>
     );

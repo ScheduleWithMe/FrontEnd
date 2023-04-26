@@ -18,6 +18,7 @@ function ResultModal(props) {
   });
   const title = props.renderData.title;
   const content = props.renderData.content;
+  const setToggle = props.setToggle;
   const [open, setOpen] = props.open;
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -37,6 +38,7 @@ function ResultModal(props) {
   };
 
   const handleClose = () => {
+    setToggle("landing");
     setOpen(false);
   };
   return (

@@ -27,8 +27,8 @@ function SubmitForm(props) {
   const navigate = useNavigate();
   const typeMapping = {
     host: [
-      { title: "title", state: title, setState: setTitle },
-      { title: "host", state: host, setState: setHost },
+      { title: "약속이름", state: title, setState: setTitle },
+      { title: "주최자", state: host, setState: setHost },
     ],
     guest: [{ title: "URL", state: host, setState: setHost }],
   };
@@ -83,7 +83,12 @@ function SubmitForm(props) {
     >
       <Grid container direction="column" sx={{ height: "100%" }}>
         <Grid item xs={4} className="flexCenter">
-          <Typography fontSize="3rem">Schedule With Me</Typography>
+          {/* <Typography >Schedule With Me</Typography> */}
+          <Typography fontSize="3rem" sx={{ fontWeight: 800 }}>
+            <span style={{ color: "#1269AE" }}>S</span>chedule{" "}
+            <span style={{ color: "#1269AE" }}>W</span>ith{" "}
+            <span style={{ color: "#1269AE" }}>M</span>e
+          </Typography>
         </Grid>
         <Grid xs={3} item>
           {renderDataSpread(typeMapping[type])}
@@ -124,6 +129,7 @@ function SubmitForm(props) {
               sx={{
                 ...buttonSX,
                 display: `${type === "host" ? "block" : "none"}`,
+                fontWeight: 800,
               }}
               variant="contained"
               onClick={() => submitBubbling(type, host, title, startDate)}
@@ -134,6 +140,7 @@ function SubmitForm(props) {
               sx={{
                 ...buttonSX,
                 display: `${type === "guest" ? "block" : "none"}`,
+                fontWeight: 800,
               }}
               variant="contained"
               onClick={() => submitBubbling(type, host, title, startDate)}

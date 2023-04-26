@@ -27,10 +27,6 @@ const firebaseAuth = getAuth(firebaseApp);
 const firebaseDB = getFirestore(firebaseApp);
 //
 const firebaseAddDoc = async (type, Schedule) => {
-  console.log(
-    "🚀 ~ file: firebase.js:30 ~ firebaseAddDoc ~ Schedule:",
-    Schedule
-  );
   try {
     if (
       type === "host" &&
@@ -48,20 +44,38 @@ const firebaseAddDoc = async (type, Schedule) => {
   }
 };
 
-const firebaseUpdateTime = async (docRef, time) => {
+const firebaseUpdateTime = async (url, time) => {
   try {
     if (time.nickname.length < 2) throw new Error("Invalid-submitForm");
+    const docRef = doc(firebaseDB, "Schedules", url); // id 값을 통해 ref를 받아올 수 있음
     const nickname = time.nickname;
     const selectedTime = time.selectedTime;
-    const docRef2 = doc(firebaseDB, "Schedules", docRef.id); // id 값을 통해 ref를 받아올 수 있음
-    const docs = await getDoc(docRef2);
+    console.log(
+      "🚀 ~ file: firebase.js:53 ~ firebaseUpdateTime ~ selectedTime:",
+      selectedTime
+    );
+    const docs = await getDoc(docRef);
     let updatedTimes = docs.data().times;
     updatedTimes = updatedTimes.filter((item) => item.nickname !== nickname);
-    updatedTimes.push(selectedTime);
+    updatedTimes.push({ nickname: nickname, selectedTime: selectedTime });
     await updateDoc(docRef, {
       times: updatedTimes,
     });
     return { success: true };
+  } catch (err) {
+    return { success: false, error: err };
+  }
+};
+const firebaseGetTimes = async (url) => {
+  try {
+    const docRef = doc(firebaseDB, "Schedules", url); // id 값을 통해 ref를 받아올 수 있음
+    const docs = await getDoc(docRef);
+    let all_available_times = []; // 이 배열에 모든 사람들의 가능한 시간들이 기록됨
+
+    for (let time of docs.data().times) {
+      all_available_times.push(time);
+    }
+    return { success: true, data: all_available_times };
   } catch (err) {
     return { success: false, error: err };
   }
@@ -75,4 +89,5 @@ export {
   signInWithEmailAndPassword,
   firebaseUpdateTime,
   firebaseAddDoc,
+  firebaseGetTimes,
 };

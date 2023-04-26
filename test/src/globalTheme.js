@@ -14,4 +14,15 @@ export const globalTheme = createTheme({
       },
     },
   },
+  palette: {
+    primary: {
+      main: "#333333",
+    },
+    secondary: {
+      main: "#DDDDDD",
+    },
+  },
+  typography: {
+    fontFamily: ["Roboto Flex", "Noto Sans KR", "sans-serif"].join(","),
+  },
 });
