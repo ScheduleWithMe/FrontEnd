@@ -213,11 +213,18 @@ const TimeSelect = (props) => {
                           }`,
                         }}
                         onClick={() => {
-                          handleClick(i, j);
+                          // handleClick(i, j);
                         }}
-                        onMouseDown={(e) => setStartPoint([i, j])}
-                        onMouseUp={(e) => setStartPoint(null)}
-                        onMouseEnter={(e) => handleDragEvent(j, i)}
+                        onMouseDown={(e) => {
+                          handleClick(i, j);
+                          setStartPoint([i, j]);
+                        }}
+                        onMouseUp={(e) => {
+                          setStartPoint(null);
+                        }}
+                        onMouseEnter={(e) => {
+                          handleDragEvent(j, i);
+                        }}
                       ></Box>
                     ))}
                   </Stack>
