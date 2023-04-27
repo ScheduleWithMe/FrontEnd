@@ -1,22 +1,10 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TimeSelect from "../../TimeSelect";
 import SessionModal from "../../modules/SubmitModal";
-import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
-import {
-  firebaseDB,
-  firebaseGetTimes,
-  firebaseUpdateTime,
-} from "../../firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { firebaseDB, firebaseGetTimes } from "../../firebase";
 const rightSideBar = {
   borderTopLeftRadius: "1rem",
   borderBottomLeftRadius: "1rem",
@@ -25,34 +13,36 @@ const rightSideBar = {
   pr: 0,
   pl: 3,
 };
-const btn = [0, 1, 2, 3, 4];
 
 function SessionPage() {
   const [open, setOpen] = useState(true);
   const [nickName, setNickName] = useState("");
   const id = useParams().id;
-  // const id = "kvf2aXIKxSoyim61EIOD";
   const [title, setTitle] = useState();
   const [startDate, setStartDate] = useState(null);
   const [hostEmail, sethostEmail] = useState();
   const [resultToggle, setResultToggle] = useState(false);
   const [result, setResult] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const getUsers = async () => {
-      const docRef2 = doc(firebaseDB, "Schedules", id); // 여기에 useparam 값 넣어주면 됨
-      const docSnap = await getDoc(docRef2);
-      setTitle(docSnap.data().title);
-      setStartDate(docSnap.data().startDate);
-      sethostEmail(docSnap.data().hostNickname);
+      try {
+        const docRef2 = doc(firebaseDB, "Schedules", id); // 여기에 useparam 값 넣어주면 됨
+        const docSnap = await getDoc(docRef2);
+        setTitle(docSnap.data().title);
+        setStartDate(docSnap.data().startDate);
+        sethostEmail(docSnap.data().hostNickname);
+      } catch (err) {
+        alert(
+          "올바르지 않은 세션주소입니다!\n세션 주소를 다시 한번 확인해주세요."
+        );
+        navigate("/");
+      }
     };
     getUsers();
-    firebaseGetTimes(id).then((response) => {
-      console.log(
-        "🚀 ~ file: SessionPage.js:52 ~ firebaseGetTimes ~ response:",
-        response
-      );
-    });
+    // firebaseGetTimes(id).then((response) => {
+
+    // });
   }, []);
 
   useEffect(() => {

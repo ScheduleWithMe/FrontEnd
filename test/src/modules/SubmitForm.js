@@ -48,10 +48,10 @@ function SubmitForm(props) {
             <TextField
               size="small"
               sx={{ width: "80%" }}
-              error={submitFlag && element.state.length < 2}
+              error={submitFlag && element.state.trim().length < 2}
               helperText={
-                submitFlag && element.state.length < 2
-                  ? "2자 이상 입력해주세요!"
+                submitFlag && element.state.trim().length < 2
+                  ? "공백 제외 2자 이상 입력해주세요!"
                   : ""
               }
               label={element.title}

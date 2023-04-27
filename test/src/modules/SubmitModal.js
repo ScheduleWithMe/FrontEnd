@@ -2,7 +2,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   Grid,
   Snackbar,
   Stack,
@@ -10,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SessionModal(props) {
@@ -48,8 +47,10 @@ function SessionModal(props) {
       >
         <Alert severity="success">{snackbar.content}</Alert>
       </Snackbar>
+
       <DialogContent sx={{ display: "flex", flexDirection: "column", pt: 5 }}>
-        <Grid container sx={{ alignItems: "center", pb: 3 }}>
+        <Typography>시간 선택에 앞서 ...</Typography>
+        <Grid container sx={{ alignItems: "center", py: 3 }}>
           <TextField
             value={value}
             label="이름을 입력해주세요!"

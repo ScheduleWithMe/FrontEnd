@@ -53,15 +53,36 @@ function ResultModal(props) {
         >
           <Alert severity="success">{snackbar.content}</Alert>
         </Snackbar>
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 800 }}>{title}</DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
-          <Grid container sx={{ alignItems: "center", pb: 3 }}>
-            <Typography>{content}</Typography>
-            <CopyToClipboard text={content} onCopy={() => handleCopy()}>
-              <Button variant={`${copied ? "outlined" : "contained"}`}>
-                복사하기
-              </Button>
-            </CopyToClipboard>
+          <Grid
+            container
+            direction="column"
+            sx={{ alignItems: "flex-start", pb: 1 }}
+          >
+            <Grid item>
+              <Typography sx={{ pb: 1, fontWeight: 200 }}>
+                아래의 식별코드를 복사해서 공유해주세요!
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              container
+              direction="row"
+              sx={{ alignItems: "center", justifyContent: "space-between" }}
+            >
+              <Typography sx={{ border: 1, p: 1, borderRadius: ".5rem" }}>
+                {content}
+              </Typography>
+              <CopyToClipboard text={content} onCopy={() => handleCopy()}>
+                <Button
+                  variant={`${copied ? "outlined" : "contained"}`}
+                  sx={{ ml: 2 }}
+                >
+                  복사하기
+                </Button>
+              </CopyToClipboard>
+            </Grid>
           </Grid>
           <Grid container sx={{ justifyContent: "flex-end" }}>
             <Button

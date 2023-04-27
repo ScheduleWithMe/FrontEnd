@@ -30,12 +30,12 @@ const firebaseAddDoc = async (type, Schedule) => {
   try {
     if (
       type === "host" &&
-      (Schedule.hostNickname.length < 2 ||
-        Schedule.title.length < 2 ||
+      (Schedule.hostNickname.trim().length < 2 ||
+        Schedule.title.trim().length < 2 ||
         Schedule.startDate === null)
     )
       throw new Error("Invalid-submitForm");
-    if (type === "guest" && Schedule.hostNickname.length < 2)
+    if (type === "guest" && Schedule.hostNickname.trim().length < 2)
       throw new Error("Invalid-submitForm");
     const docRef = await addDoc(collection(firebaseDB, "Schedules"), Schedule);
     return { success: true, docRef: docRef.id };
@@ -46,14 +46,10 @@ const firebaseAddDoc = async (type, Schedule) => {
 
 const firebaseUpdateTime = async (url, time) => {
   try {
-    if (time.nickname.length < 2) throw new Error("Invalid-submitForm");
+    if (time.nickname.trim().length < 2) throw new Error("Invalid-submitForm");
     const docRef = doc(firebaseDB, "Schedules", url); // id 값을 통해 ref를 받아올 수 있음
     const nickname = time.nickname;
     const selectedTime = time.selectedTime;
-    console.log(
-      "🚀 ~ file: firebase.js:53 ~ firebaseUpdateTime ~ selectedTime:",
-      selectedTime
-    );
     const docs = await getDoc(docRef);
     let updatedTimes = docs.data().times;
     updatedTimes = updatedTimes.filter((item) => item.nickname !== nickname);

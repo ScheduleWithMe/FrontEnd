@@ -1,18 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { collection, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
-import { firebaseDB, firebaseGetTimes, firebaseUpdateTime } from "./firebase";
+import { firebaseUpdateTime } from "./firebase";
 import {
   Box,
   Button,
-  Divider,
   Grid,
   Paper,
   Stack,
   Switch,
   Typography,
 } from "@mui/material";
-import { Groups, Person, Verified } from "@mui/icons-material";
+import { Autorenew, Groups, Person, Verified } from "@mui/icons-material";
 // import moment from "moment";
 const btn = [0, 1, 2, 3, 4];
 const row = [0, 1, 2, 3, 4, 5, 6];
@@ -38,6 +36,7 @@ const colorMap = {
   4: "#C95328ff",
   5: "#C95328",
 };
+const gridElementHeight = "2.5rem";
 
 const TimeSelect = (props) => {
   const id = props.id;
@@ -55,6 +54,7 @@ const TimeSelect = (props) => {
   const [dates, setDates] = useState([]);
   const [resultToggle, setResultToggle] = props.toggle;
   const result = props.result;
+
   useEffect(() => {
     if (!result) return;
     const newResultCount = new Array(168).fill(0);
@@ -76,6 +76,18 @@ const TimeSelect = (props) => {
   useEffect(() => {
     setButtonStates(new Array(7).fill().map(() => new Array(24).fill(false)));
   }, [resultToggle]);
+
+  useEffect(() => {
+    if (startDate != null) {
+      const cntdate = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + i);
+        cntdate.push(date.toISOString().split("T")[0]);
+        setDates(cntdate);
+      }
+    }
+  }, [startDate]);
 
   const handleClick = (rowIndex, colIndex) => {
     if (resultToggle) return;
@@ -111,17 +123,9 @@ const TimeSelect = (props) => {
     });
   };
 
-  useEffect(() => {
-    if (startDate != null) {
-      const cntdate = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(startDate);
-        date.setDate(date.getDate() + i);
-        cntdate.push(date.toISOString().split("T")[0]);
-        setDates(cntdate);
-      }
-    }
-  }, [startDate]);
+  const handleReset = () => {
+    setButtonStates(new Array(7).fill().map(() => new Array(24).fill(false)));
+  };
 
   const handleUserToggle = (index) => {
     const newUseSelected = [...useSelected];
@@ -141,19 +145,19 @@ const TimeSelect = (props) => {
           <Grid item xs={1}>
             {/* dummyBox */}
             <Stack spacing={rowSpacing}>
-              <Box className="flexCenter" sx={{ height: "2rem" }}>
-                <Person />
+              <Box className="flexCenter" sx={{ height: gridElementHeight }}>
+                <Person fontSize={`${!resultToggle ? "large" : ""}`} />
                 <Switch
-                  value={resultToggle}
+                  checked={resultToggle}
                   onChange={() => setResultToggle(!resultToggle)}
                 />
-                <Groups />
+                <Groups fontSize={`${resultToggle ? "large" : ""}`} />
               </Box>
               {dates.map((date) => (
                 <Typography
                   className="flexCenter"
                   key={date}
-                  sx={{ height: "2rem", fontFamily: "Noto Sans KR" }}
+                  sx={{ height: gridElementHeight, fontFamily: "Noto Sans KR" }}
                 >
                   {date.slice(5).replace("-", "월 ")}일
                 </Typography>
@@ -170,7 +174,7 @@ const TimeSelect = (props) => {
                     direction={"row"}
                     sx={{
                       width: "2rem",
-                      height: "2rem",
+                      height: gridElementHeight,
                       fontFamily: "Noto Sans KR",
                       fontWeight: 200,
                     }}
@@ -198,10 +202,10 @@ const TimeSelect = (props) => {
                               : "#D9D9D9"
                           }`,
                           width: "2rem",
-                          height: "2rem",
+                          height: gridElementHeight,
                           border: `${
                             resultToggle &&
-                            maxCount > 0 &&
+                            maxCount > 1 &&
                             resultCount[i * 24 + j] === maxCount
                               ? "2px solid black"
                               : "0px solid"
@@ -248,23 +252,38 @@ const TimeSelect = (props) => {
       </Stack>
       <Stack
         display={`${!resultToggle ? "flex" : "none"}`}
-        justifyContent="space-evenly"
+        justifyContent="space-around"
       >
         <Box />
         <Box />
         <Box />
         <Box />
-        <Paper sx={{ ...submitRadius }} elevation={8}>
-          <Button
-            variant={`contained`}
-            size="large"
-            sx={{ ...submitRadius, flexDirection: "column-reverse" }}
-            onClick={() => handleSubmit()}
-          >
-            <Typography>제출</Typography>
-            <Verified fontSize="large" />
-          </Button>
-        </Paper>
+        <Stack spacing={4}>
+          <Paper sx={{ ...submitRadius }} elevation={8}>
+            <Button
+              variant={`contained`}
+              size="large"
+              sx={{ ...submitRadius, flexDirection: "column-reverse" }}
+              onClick={() => {
+                handleReset();
+              }}
+            >
+              <Typography>초기화</Typography>
+              <Autorenew fontSize="large" />
+            </Button>
+          </Paper>
+          <Paper sx={{ ...submitRadius }} elevation={8}>
+            <Button
+              variant={`contained`}
+              size="large"
+              sx={{ ...submitRadius, flexDirection: "column-reverse" }}
+              onClick={() => handleSubmit()}
+            >
+              <Typography>제출</Typography>
+              <Verified fontSize="large" />
+            </Button>
+          </Paper>
+        </Stack>
       </Stack>
     </Stack>
   );

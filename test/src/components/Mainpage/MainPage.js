@@ -50,8 +50,8 @@ function MainPage() {
     firebaseAddDoc(type, Schedule).then((response) => {
       if (!response.success) return setSnackbar({ ...snackbar, open: true });
       setModalContents({ ...modalContents, content: response.docRef });
+      setModalOpen(true);
     });
-    setModalOpen(true);
     return;
   };
   const LandingContents = (flag) => (
