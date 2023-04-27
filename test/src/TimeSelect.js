@@ -101,13 +101,14 @@ const TimeSelect = (props) => {
     if (startPoint) {
       const [startRow, startCol] = startPoint;
       const newButtonStates = [...buttonStates];
-      const [min, max] = [
-        Math.min(startCol, colIndex),
-        Math.max(startCol, colIndex),
-      ];
-      for (let i = min; i <= max; i++) {
-        newButtonStates[startRow][i] = true;
-      }
+      // const [min, max] = [
+      //   Math.min(startCol, colIndex),
+      //   Math.max(startCol, colIndex),
+      // ];
+      // for (let i = min; i <= max; i++) {
+      //   newButtonStates[startRow][i] = true;
+      // }
+      newButtonStates[startRow][colIndex] = !newButtonStates[startRow][colIndex];
       setButtonStates(newButtonStates);
     }
   };
@@ -215,9 +216,8 @@ const TimeSelect = (props) => {
                           handleClick(i, j);
                         }}
                         onMouseDown={(e) => setStartPoint([i, j])}
-                        onMouseMove={(e) =>
-                          startPoint ? handleDragEvent(j, i) : ""
-                        }
+                        onMouseUp={(e) => setStartPoint(null)}
+                        onMouseEnter={(e) => handleDragEvent(j, i)}
                       ></Box>
                     ))}
                   </Stack>
