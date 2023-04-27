@@ -69,7 +69,7 @@ function MainPage() {
         </Typography>
       </Grid>
       <Grid item>
-        <Stack direction="row" spacing={5}>
+        <Stack direction="row" spacing={10}>
           <Button
             sx={buttonSX}
             variant="outlined"
@@ -109,7 +109,6 @@ function MainPage() {
             />
           )}
         </Grid>
-        {/* 여기 src 만 적당한 이미지 주소로 바꿔주시면 됩니다 */}
         <Grid item xs={6}>
           <Paper
             sx={{ ...fullSX, backgroundColor: "#1269AE", borderRadius: 0 }}

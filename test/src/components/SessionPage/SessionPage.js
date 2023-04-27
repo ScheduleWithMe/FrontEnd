@@ -1,9 +1,10 @@
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Grid, Paper, Snackbar, Stack, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TimeSelect from "../../TimeSelect";
 import SessionModal from "../../modules/SubmitModal";
 import { getDoc, doc } from "firebase/firestore";
+import MuiAlert from "@mui/material/Alert";
 import { firebaseDB, firebaseGetTimes } from "../../firebase";
 const rightSideBar = {
   borderTopLeftRadius: "1rem",
@@ -24,10 +25,19 @@ function SessionPage() {
   const [resultToggle, setResultToggle] = useState(false);
   const [result, setResult] = useState([]);
   const navigate = useNavigate();
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    content: "최대 참여인원 5명을 초과하는 인원이 참여했습니다!",
+  });
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const docRef2 = doc(firebaseDB, "Schedules", id); // 여기에 useparam 값 넣어주면 됨
+        const docRef2 = doc(firebaseDB, "Schedules", id);
         const docSnap = await getDoc(docRef2);
         setTitle(docSnap.data().title);
         setStartDate(docSnap.data().startDate);
@@ -40,9 +50,6 @@ function SessionPage() {
       }
     };
     getUsers();
-    // firebaseGetTimes(id).then((response) => {
-
-    // });
   }, []);
 
   useEffect(() => {
@@ -75,6 +82,7 @@ function SessionPage() {
             startDate={startDate}
             toggle={[resultToggle, setResultToggle]}
             result={result}
+            snackbar={[snackbar, setSnackbar]}
           />
           <Stack
             display={!resultToggle ? "flex" : "none"}
@@ -176,6 +184,15 @@ function SessionPage() {
           </Stack>
         </Grid>
       </Grid>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        sx={{ mb: 10 }}
+      >
+        <Alert severity="error">{snackbar.content}</Alert>
+      </Snackbar>
     </Box>
   );
 }

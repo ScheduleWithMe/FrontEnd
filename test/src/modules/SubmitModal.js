@@ -16,14 +16,13 @@ function SessionModal(props) {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-  //submit function 가져오기
   const [open, setOpen] = props.open;
   const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({
     open: false,
     vertical: "top",
     horizontal: "center",
-    content: "공백 제외 2자 이상의 이름을 입력해주세요!",
+    content: "공백 제외 2~4자의 이름을 입력해주세요!",
   });
 
   const setNickName = props.setNickName;
@@ -32,7 +31,7 @@ function SessionModal(props) {
 
   const handleNickname = () => {
     setSubmit(true);
-    if (value.trim().length < 2) return;
+    if (value.trim().length < 2 || value.trim().length > 4) return;
     setNickName(value);
     setOpen(false);
   };
@@ -54,10 +53,12 @@ function SessionModal(props) {
           <TextField
             value={value}
             label="이름을 입력해주세요!"
-            error={submit && value.trim().length < 2}
+            error={
+              submit && (value.trim().length < 2 || value.trim().length > 4)
+            }
             helperText={
-              submit && value.trim().length < 2
-                ? "공백 제외 2자 이상 입력해주세요!"
+              submit && (value.trim().length < 2 || value.trim().length > 4)
+                ? "공백 제외 2~4 자 입력해주세요!"
                 : ""
             }
             onChange={(e) => setValue(e.target.value)}

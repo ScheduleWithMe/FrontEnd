@@ -27,7 +27,7 @@ function SubmitForm(props) {
   const navigate = useNavigate();
   const typeMapping = {
     host: [
-      { title: "약속이름", state: title, setState: setTitle },
+      { title: "약속 이름", state: title, setState: setTitle },
       { title: "주최자", state: host, setState: setHost },
     ],
     guest: [{ title: "URL", state: host, setState: setHost }],

@@ -15,15 +15,15 @@ import { Autorenew, Groups, Person, Verified } from "@mui/icons-material";
 const btn = [0, 1, 2, 3, 4];
 const row = [0, 1, 2, 3, 4, 5, 6];
 const column = [
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-  22, 23,
+  6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2,
+  3, 4, 5,
 ];
 const submitRadius = {
   borderTopLeftRadius: 0,
   borderBottomLeftRadius: 0,
   borderTopRightRadius: ".5rem",
   borderBottomRightRadius: ".5rem",
-  width: "6rem",
+  width: "6.5rem",
   height: "4rem",
 };
 const columnSpcing = 2;
@@ -53,6 +53,7 @@ const TimeSelect = (props) => {
   const nickName = props.nickName;
   const [dates, setDates] = useState([]);
   const [resultToggle, setResultToggle] = props.toggle;
+  const [snackbar, setSnackbar] = props.snackbar;
   const result = props.result;
 
   useEffect(() => {
@@ -101,27 +102,29 @@ const TimeSelect = (props) => {
     if (startPoint) {
       const [startRow, startCol] = startPoint;
       const newButtonStates = [...buttonStates];
-      // const [min, max] = [
-      //   Math.min(startCol, colIndex),
-      //   Math.max(startCol, colIndex),
-      // ];
-      // for (let i = min; i <= max; i++) {
-      //   newButtonStates[startRow][i] = true;
-      // }
-      newButtonStates[startRow][colIndex] = !newButtonStates[startRow][colIndex];
+      newButtonStates[startRow][colIndex] =
+        !newButtonStates[startRow][colIndex];
       setButtonStates(newButtonStates);
     }
   };
   const handleSubmit = () => {
-    const flattenedButtonStates = buttonStates.flat();
-    const updatetime = {
-      nickname: nickName,
-      selectedTime: flattenedButtonStates,
-    };
-    firebaseUpdateTime(id, updatetime).then((response) => {
-      if (!response.success) return;
-      setResultToggle(true);
-    });
+    try {
+      const flattenedButtonStates = buttonStates.flat();
+      const updatetime = {
+        nickname: nickName,
+        selectedTime: flattenedButtonStates,
+      };
+      firebaseUpdateTime(id, updatetime).then((response) => {
+        if (!response.success) return setSnackbar({ ...snackbar, open: true });
+        setResultToggle(true);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+  const handleMouseDown = (i, j) => {
+    handleClick(i, j);
+    setStartPoint([i, j]);
   };
 
   const handleReset = () => {
@@ -144,7 +147,6 @@ const TimeSelect = (props) => {
       >
         <Grid container>
           <Grid item xs={1}>
-            {/* dummyBox */}
             <Stack spacing={rowSpacing}>
               <Box className="flexCenter" sx={{ height: gridElementHeight }}>
                 <Person fontSize={`${!resultToggle ? "large" : ""}`} />
@@ -212,12 +214,9 @@ const TimeSelect = (props) => {
                               : "0px solid"
                           }`,
                         }}
-                        onClick={() => {
-                          // handleClick(i, j);
-                        }}
                         onMouseDown={(e) => {
-                          handleClick(i, j);
-                          setStartPoint([i, j]);
+                          e.preventDefault();
+                          handleMouseDown(i, j);
                         }}
                         onMouseUp={(e) => {
                           setStartPoint(null);
