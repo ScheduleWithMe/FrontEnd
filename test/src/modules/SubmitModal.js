@@ -65,7 +65,7 @@ function SessionModal(props) {
           />
         </Grid>
         <Stack spacing={1} direction="row" sx={{ justifyContent: "flex-end" }}>
-          <Button variant="outlined" onClick={() => navigate("/")}>
+          <Button variant="outlined" onClick={() => navigate("/FrontEnd")}>
             취소
           </Button>
           <Button variant="contained" onClick={handleNickname}>

@@ -36,7 +36,7 @@ function SessionPage() {
         alert(
           "올바르지 않은 세션주소입니다!\n세션 주소를 다시 한번 확인해주세요."
         );
-        navigate("/");
+        navigate("/FrontEnd");
       }
     };
     getUsers();

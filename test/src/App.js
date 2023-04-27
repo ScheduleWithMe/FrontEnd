@@ -14,8 +14,8 @@ function App() {
         sx={{ width: "100vw", height: "100vh", minWidth: 1600 }}
       >
         <Routes>
-          <Route path="/:id" element={<SessionPage />} />
-          <Route path="/" element={<MainPage />} />
+          <Route path="/FrontEnd" element={<MainPage />} />
+          <Route path="/FrontEnd/:id" element={<SessionPage />} />
         </Routes>
       </Box>
     </Router>

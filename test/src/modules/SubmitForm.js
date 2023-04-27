@@ -65,7 +65,7 @@ function SubmitForm(props) {
   };
   const submitBubbling = (type, host, title, startDate) => {
     if (type === "guest") {
-      navigate(`/${host}`);
+      navigate(`/FrontEnd/${host}`);
       return;
     }
     setSubmitFlag(true);
